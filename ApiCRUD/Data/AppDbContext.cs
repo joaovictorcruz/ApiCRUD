@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ApiCRUD.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiCRUD.Data
 {
@@ -8,6 +9,9 @@ namespace ApiCRUD.Data
         public AppDbContext(DbContextOptions<AppDbContext> options): base(options)
         {
         }
+
+        public DbSet<AutorModel> Autores { get; set; } //Tabela de autores
+        public DbSet<LivroModel> Livros { get; set; } //Tabela de livros
     }
 }
  
