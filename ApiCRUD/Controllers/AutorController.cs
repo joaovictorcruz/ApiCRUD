@@ -1,4 +1,5 @@
-﻿using ApiCRUD.Models;
+﻿using ApiCRUD.Dto.Autor;
+using ApiCRUD.Models;
 using ApiCRUD.Services.Autor;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,11 @@ namespace ApiCRUD.Controllers
             var autor = await _autorInterface.BuscarAutorPorIdLivro(idLivro);
             return Ok(autor);
         }
-
+        [HttpPost("CriarAutor")]
+        public async Task<ActionResult<ResponseModel<AutorModel>>> CriarAutor(AutorCriacaoDto autorCriacaoDto)
+        {
+            var autores = await _autorInterface.CriarAutor(autorCriacaoDto);
+            return Ok(autores); 
+        }
     }
 }
