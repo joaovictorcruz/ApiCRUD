@@ -1,12 +1,38 @@
-﻿using ApiCRUD.Models;
+﻿using ApiCRUD.Data;
+using ApiCRUD.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiCRUD.Services.Autor
 {
     public class AutorService : IAutorInterface
     {
-        public Task<ResponseModel<AutorModel>> BuscarAutorPorId(int idAutor)
+        private readonly AppDbContext _context;
+        public AutorService (AppDbContext context) 
         {
-            throw new NotImplementedException();
+            _context = context; 
+        }
+        public async Task<ResponseModel<AutorModel>> BuscarAutorPorId(int idAutor)
+        {
+            ResponseModel<AutorModel> resposta = new ResponseModel<AutorModel>();
+            try
+            {
+                var autor = await _context.Autores.FirstOrDefaultAsync(autorBanco => autorBanco.Id == idAutor);
+                if (autor == null) 
+                {
+                    resposta.Mensagem = "Nenhum registro localizado";
+                    return resposta; 
+                }
+
+                resposta.Dados = autor;
+                resposta.Mensagem = "Autor localizado!";
+                return resposta;
+            }
+            catch (Exception ex) 
+            {
+                resposta.Mensagem = "Autor buscado por ID";
+                resposta.Status = false;
+                return resposta;
+            }
         }
 
         public Task<ResponseModel<AutorModel>> BuscarAutorPorLivro(int idLivro)
@@ -14,9 +40,24 @@ namespace ApiCRUD.Services.Autor
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<List<AutorModel>>> ListarAutores()
+        public async Task<ResponseModel<List<AutorModel>>> ListarAutores()
         {
-            throw new NotImplementedException();
+            ResponseModel<List<AutorModel>> resposta = new ResponseModel<List<AutorModel>>();   
+            try
+            {
+                var autores = await _context.Autores.ToListAsync();
+
+                resposta.Dados = autores;
+                resposta.Mensagem = "Todos os autores foram coletados";
+
+                return resposta;
+            }
+            catch (Exception ex) 
+            {
+                resposta.Mensagem = ex.Message;
+                resposta.Status = false;
+                return resposta;
+            }
         }
     }
 }
